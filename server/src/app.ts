@@ -1,20 +1,28 @@
-import express from 'express';
-import cors from 'cors';
-import { productsRouter } from './routes/products-router.js';
-import { authRouter } from './routes/auth-router.js';
-import { usersRouter } from './routes/users-router.js';
-import { ordersRouter } from './routes/orders-router.js';
-import { errorHandler } from './middleware/error-handler.js';
-import { getClientOrigin } from './config.js';
+import path from "node:path";
+import express from "express";
+import cors from "cors";
+import { productsRouter } from "./routes/products-router.js";
+import { authRouter } from "./routes/auth-router.js";
+import { usersRouter } from "./routes/users-router.js";
+import { ordersRouter } from "./routes/orders-router.js";
+import { errorHandler } from "./middleware/error-handler.js";
+import { getClientOrigin } from "./config.js";
 
 const app = express();
+// The built client: index.html and its JavaScript and CSS.
+const clientDist = path.join(import.meta.dirname, "..", "..", "client", "dist");
+// Is the app up?
+app.get("/health", (_req, res) => {
+  res.json({ ok: true });
+});
 
+app.use(express.static(clientDist));
 app.use(cors({ origin: getClientOrigin() }));
 app.use(express.json());
-app.use('/products', productsRouter);
-app.use('/auth', authRouter);
-app.use('/users', usersRouter);
-app.use('/orders', ordersRouter);
+app.use("/products", productsRouter);
+app.use("/auth", authRouter);
+app.use("/users", usersRouter);
+app.use("/orders", ordersRouter);
 app.use(errorHandler);
 
 export { app };
