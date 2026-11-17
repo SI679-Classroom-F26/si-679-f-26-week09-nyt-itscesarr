@@ -15,6 +15,17 @@ export const connect = async (
   await client.connect();
   database = client.db(dbName);
 };
+// The tests pass their own uri and database name.
+
+
+// export const connect = async (
+//   uri: string = getMongoUri(),
+//   dbName: string = getDbName()
+// ): Promise<void> => {
+//   client = new MongoClient(uri);
+//   await client.connect();
+//   database = client.db(dbName);
+// };
 
 export const disconnect = async (): Promise<void> => {
   if (client) {
@@ -24,3 +35,5 @@ export const disconnect = async (): Promise<void> => {
 };
 
 export const getDb = (): Db => database;
+
+
